@@ -208,6 +208,7 @@ open class Repeat : Equatable {
 	///
 	/// - Parameter timeout: interval of the timer
 	public func reset(_ interval: Interval?) {
+		guard self.isRunning else { return }
 		self.pause()
 		if let i = interval {
 			self.interval = i
