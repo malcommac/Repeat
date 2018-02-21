@@ -7,11 +7,19 @@
 
 <p align="center" >★★ <b>Star Repeat to help the project! </b> ★★</p>
 
-Repeat is small lightweight alternative to `NSTimer`.
+### Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references and multiple observers.
 
-## WHAT'S REPEAT
+## What's Repeat
 
+The main goals of Repeat are:
 
+* Simple, less verbose APIs methods to create and manage our timer.
+* Avoid strong reference to the destination target and avoid NSObject inheritance.
+* Use callback to inform about fire events; allows multiple observers to subscribe to the same timer
+* Ability to pause , start , resume and reset our timer.
+* Ability to set different repeat modes ( infinite : infinite sequence of fires, at regular intervals,finite : a finite sequence of fires, at regular intervals, once : a single fire events at specified interval since start).
+
+## How it works
 
 ## Installation
 
