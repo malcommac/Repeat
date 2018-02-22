@@ -5,12 +5,14 @@
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
-<p align="center" >★★ <b>Star Repeat to help the project! </b> ★★</p>
+<p align="center" >★★ <b>Star me to follow the project! </b> ★★</p>
 
 # Modern NSTimer in GCD
 
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
-Repeat is based upon GCD - Grand Central Dispatch. If you want to learn more about it check out [my article](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb) on Medium.
+Repeat is based upon GCD - Grand Central Dispatch. 
+
+**› Learn More**: If you want to learn more about it check out [my article on Medium](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
 
 Main features offered by Repeat are:
 
@@ -113,7 +115,7 @@ platform :ios, '8.0'
 
 target 'TargetName' do
 use_frameworks!
-pod 'Repeast'
+pod 'Repeat'
 end
 ```
 
