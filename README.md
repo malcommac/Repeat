@@ -1,4 +1,4 @@
-# New Document# Repeat
+# Repeat Modern NSTimer in GCD
 
 [![Version](https://img.shields.io/cocoapods/v/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![License](https://img.shields.io/cocoapods/l/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![Platform](https://img.shields.io/cocoapods/p/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Repeat.svg)](https://img.shields.io/cocoapods/v/Repeat.svg)
@@ -6,8 +6,6 @@
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
 <p align="center" >★★ <b>Star me to follow the project! </b> ★★</p>
-
-# Modern NSTimer in GCD
 
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
 Repeat is based upon GCD - Grand Central Dispatch. 
