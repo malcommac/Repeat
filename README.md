@@ -87,6 +87,15 @@ You can remove an observer by using the token:
 ```swift 
 timer.remove(token)
 ```
+## Requirements
+
+Repeat is compatible with Swift 4.x.
+All Apple platforms are supported:
+
+* iOS 8.0+
+* macOS 10.9+
+* watchOS 2.0+
+* tvOS 9.0+
 
 ## Installation
 
