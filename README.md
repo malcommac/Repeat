@@ -86,8 +86,7 @@ You can remove an observer by using the token:
 
 ```swift 
 timer.remove(token)
-``
-
+```
 
 ## Installation
 
