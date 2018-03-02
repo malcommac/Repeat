@@ -58,7 +58,7 @@ You can create a new instance of timer and start as needed by calling the `start
 
 ```swift
 let timer = Repeat(interval: .seconds(5), mode: .infinite) { _ in
-	// do something		
+  // do something		
 }
 timer.start()
 ```
@@ -77,7 +77,7 @@ Timer instance received in callback is weak.
 
 ```swift
 let token = timer.observe { _ in
-	// a new observer is called		
+  // a new observer is called		
 }
 timer.start()
 ```
