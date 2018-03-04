@@ -1,6 +1,6 @@
 //
 //	Repeat
-//	A modern alternative to NSTimer
+//	A modern alternative to NSTimer made in GCD.
 //	------------------------------------------------
 //	Created by:	Daniele Margutti
 //				hello@danielemargutti.com
@@ -31,6 +31,53 @@
 import Foundation
 
 open class Repeat : Equatable {
+	
+	/// State of the timer
+	///
+	/// - paused: idle (never started yet or paused)
+	/// - running: timer is running
+	/// - finished: timer lifetime is finished
+	public enum State: Equatable, CustomStringConvertible {
+		case paused
+		case running
+		case finished
+		
+		public static func ==(lhs: State, rhs: State) -> Bool {
+			switch (lhs,rhs) {
+			case (.paused,.paused),
+				 (.running,.running),
+				 (.finished,.finished):
+				return true
+			default:
+				return false
+			}
+		}
+		
+		/// Return `true` if timer is currently running.
+		public var isRunning: Bool {
+			guard case .running = self else { return false }
+			return true
+		}
+		
+		/// Is timer finished its lifetime?
+		/// It return always `false` for infinite timers.
+		/// It return `true` for `.once` mode timer  after the first fire,
+		/// and when `.remainingIterations` is zero for `.finite` mode timers
+		public var isFinished: Bool {
+			guard case .finished = self else { return false }
+			return true
+		}
+		
+		/// State description
+		public var description: String {
+			switch self {
+			case .paused:	return "idle/paused"
+			case .finished:	return "finished"
+			case .running:	return "running"
+			}
+		}
+		
+	}
 	
 	/// Repeat interval
 	public enum Interval {
@@ -72,11 +119,19 @@ open class Repeat : Equatable {
 		}
 		
 		/// Number of repeats, if applicable. Otherwise `nil`
-		public var repeatCount: Int? {
+		public var countIterations: Int? {
 			switch self {
 			case .finite(let c):	return c
 			default:				return nil
 			}
+		}
+		
+		/// Is infinite timer
+		public var isInfinite: Bool {
+			guard case .infinite = self else {
+				return false
+			}
+			return true
 		}
 		
 	}
@@ -87,6 +142,16 @@ open class Repeat : Equatable {
 	/// Token assigned to the observer
 	public typealias ObserverToken = UInt64
 
+	/// Current state of the timer
+	public private(set) var state: State = .paused {
+		didSet {
+			self.onStateChanged?(self,state)
+		}
+	}
+	
+	/// Callback called to intercept state's change of the timer
+	public var onStateChanged: ((_ timer: Repeat, _ state: State) -> (Void))? = nil
+	
 	/// List of the observer of the timer
 	private var observers = [ObserverToken : Observer]()
 
@@ -94,16 +159,13 @@ open class Repeat : Equatable {
 	private var nextObserverID: UInt64 = 0
 	
 	/// Internal GCD Timer
-	private var timer: DispatchSourceTimer!
+	private var timer: DispatchSourceTimer? = nil
 	
 	/// Is timer a repeat timer
-	private var mode: Mode
+	public private(set) var mode: Mode
 	
 	/// Number of remaining repeats count
-	private var countRemainingRepeat: Int?
-	
-	/// Is timer currently running
-	private var isRunning: Bool = false
+	public private(set) var remainingIterations: Int?
 	
 	/// Interval of the timer
 	private var interval: Interval
@@ -125,14 +187,15 @@ open class Repeat : Equatable {
 	///   - torelance: tolerance of the timer, 0 is default.
 	///   - queue: queue in which the timer should be executed; if `nil` a new queue is created automatically.
 	///   - observer: observer
-	public init(interval: Interval, mode: Mode = .infinite,
+	public init(interval: Interval,
+				mode: Mode = .infinite,
 				torelance: DispatchTimeInterval = .nanoseconds(0),
 				queue: DispatchQueue? = nil,
-				observer: @escaping  Observer) {
+				observer: @escaping Observer) {
 		self.mode = mode
 		self.interval = interval
 		self.torelance = torelance
-		self.countRemainingRepeat = mode.repeatCount
+		self.remainingIterations = mode.countIterations
 		self.queue = (queue ?? DispatchQueue(label: "com.repeat.queue"))
 		self.timer = configureTimer()
 		self.observe(observer)
@@ -161,8 +224,14 @@ open class Repeat : Equatable {
 	}
 	
 	/// Remove all observers of the timer.
-	public func removeAllObservers() {
+	///
+	/// - Parameter stopTimer: `true` to also stop timer by calling `pause()` function.
+	public func removeAllObservers(thenStop stopTimer: Bool = false) {
 		self.observers.removeAll()
+		
+		if stopTimer {
+			self.pause()
+		}
 	}
 	
 	/// Configure a new timer session.
@@ -186,6 +255,13 @@ open class Repeat : Equatable {
 		return timer
 	}
 	
+	/// Destroy current timer
+	private func destroyTimer() {
+		self.timer?.setEventHandler(handler: nil)
+		//self.timer?.resume()
+		self.timer?.cancel()
+		self.timer?.resume()
+	}
 	
 	/// Create and schedule a timer that will call `handler` once after the specified time.
 	///
@@ -225,63 +301,107 @@ open class Repeat : Equatable {
 		}
 	}
 	
-	/// Reset to a new specified interval.
-	/// If timer is with a limit count it will be resetted to the intial value automatically.
+	/// Reset the state of the timer, optionally changing the fire interval.
 	///
-	/// - Parameter timeout: interval of the timer
-	public func reset(_ interval: Interval?) {
-		guard self.isRunning else { return }
-		self.pause()
-		if let i = interval {
-			self.interval = i
-			self.countRemainingRepeat = self.mode.repeatCount
+	/// - Parameters:
+	///   - interval: new fire interval; pass `nil` to keep the latest interval set.
+	///   - restart: `true` to automatically restart the timer, `false` to keep it stopped after configuration.
+	public func reset(_ interval: Interval?, restart: Bool = true) {
+		if self.state.isRunning {
+			self.setPause()
 		}
+		
+		// For finite counter we want to also reset the repeat count
+		if case .finite(let count) = self.mode {
+			self.remainingIterations = count
+		}
+		
+		// Create a new instance of timer configured
+		if let newInterval = interval { self.interval = newInterval } // update interval
+		self.destroyTimer()
 		self.timer = configureTimer()
-		self.start()
+		self.state = .paused
+
+		if restart {
+			self.timer?.resume()
+			self.state = .running
+		}
 	}
 	
 	/// Start timer. If timer is already running it does nothing.
 	@discardableResult
 	public func start() -> Bool {
-		guard self.isRunning == false else { return false }
-		self.timer.resume()
-		self.isRunning = true
+		guard self.state.isRunning == false else {
+			return false
+		}
+				
+		// If timer has not finished its lifetime we want simply
+		// restart it from the current state.
+		guard self.state.isFinished == true else {
+			self.state = .running
+			self.timer?.resume()
+			return true
+		}
+
+		// Otherwise we need to reset the state based upon the mode
+		// and start it again.
+		self.reset(nil, restart: true)
 		return true
 	}
 	
 	/// Pause a running timer. If timer is paused it does nothing.
 	@discardableResult
 	public func pause() -> Bool {
-		guard self.isRunning else { return false }
-		self.timer.suspend()
-		self.isRunning = false
+		return self.setPause()
+	}
+	
+	/// Pause a running timer optionally changing the state.
+	/// It is used internally to avoid double state change from paused -> finished
+	/// for `finite` timer mode.
+	///
+	/// - Parameter changeState: `true` to change the state to `.paused`, `false` to ignore change.
+	/// - Returns: `true` if timer is paused
+	@discardableResult
+	private func setPause(to state: State = .paused) -> Bool {
+		guard self.state.isRunning || self.state.isFinished else {
+			return false
+		}
+		
+		self.timer?.suspend()
+		self.state = state
+
 		return true
 	}
 	
 	/// Called when timer is fired
 	private func timeFired() {
-		self.observers.values.forEach {
-			$0(self)
-		}
 		
-		func decrementRepeatCountIfNeeded() {
-			guard self.mode.isRepeating, self.mode.repeatCount ?? 0 > 0 else { return }
-			self.countRemainingRepeat! -= 1
-			if self.countRemainingRepeat! == 0 {
-				self.pause()
+		// dispatch to observers
+		self.observers.values.forEach { $0(self) }
+		
+		// manage lifetime
+		switch self.mode {
+		case .once:
+			// once timer's lifetime is finished after the first fire
+			// you can reset it by calling `reset()` function.
+			self.setPause(to: .finished)
+		case .finite(_):
+			// for finite intervals we decrement the left iterations count...
+			self.remainingIterations! -= 1
+			if self.remainingIterations! == 0 {
+				// ...if left count is zero we just pause the timer and stop
+				self.setPause(to: .finished)
 			}
+		case .infinite:
+			// infinite timer does nothing special on the state machine
+			break
 		}
 		
-		decrementRepeatCountIfNeeded()
 	}
 	
 	deinit {
 		self.observers.removeAll()
-		self.timer.cancel()
-		// If the timer is suspended, calling cancel without resuming
-		// triggers a crash. This is documented here
-		// https://forums.developer.apple.com/thread/15902
-		self.start()
+		self.destroyTimer()
 	}
 	
 	public static func == (lhs: Repeat, rhs: Repeat) -> Bool {

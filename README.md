@@ -67,8 +67,14 @@ Other functions are:
 
 * `start()`: start a paused or newly created timer
 * `pause()`: pause a running timer
-* `reset(_ interval: Interval)`: reset a running timer, change the interval and restart again
+* `reset(_ interval: Interval, restart: Bool)`: reset a running timer, change the interval and restart again if set.
 * `fire()`: manually fire an event of the timer from an external source
+
+Properties:
+
+* `.id`: unique identifier of the timer
+* `.mode`: define the type of timer (`infinite`,`finite`,`once`)
+* `.remainingIterations`: for a `.finite` mode it contains the remaining number of iterations before it finishes.
 
 ### Adding/Removing Observers
 
@@ -87,6 +93,23 @@ You can remove an observer by using the token:
 ```swift 
 timer.remove(token)
 ```
+
+### Observing state change
+
+Each timer can be in one of the following states, you can observe via `.state` property:
+
+* `.paused`: timer is in idle (never started yet) or paused
+* `.running`: timer is currently active and running
+* `.finished`: timer lifecycle is finished (it's valid for a finite/once state timer)
+
+You can listen for state change by assigning a function callback for `.onStateChanged` property.
+
+```swift
+timer.onStateChanged = { (timer,newState) in
+	// your own code
+}
+```
+
 ## Requirements
 
 Repeat is compatible with Swift 4.x.
@@ -96,6 +119,16 @@ All Apple platforms are supported:
 * macOS 10.9+
 * watchOS 2.0+
 * tvOS 9.0+
+
+## Latest Version
+
+Latest version of Repeat is [0.2.0](https://github.com/malcommac/Repeat/releases/tag/0.2.0) published on 2018/03/04.
+
+**Changelog - 0.2.0**:
+
+* [#1](https://github.com/malcommac/Repeat/issues/3): Fixed CocoaPods installation
+* [#2](https://github.com/malcommac/Repeat/issues/2): Fixed leaks with GCD while deallocating dispatch queue
+* [#3](https://github.com/malcommac/Repeat/issues/3): Refactoring timer's state using a `State` enum which define the possible states of the timer (`paused`,`running` or `finished`).
 
 ## Installation
 
