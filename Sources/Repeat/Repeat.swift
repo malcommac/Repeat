@@ -401,6 +401,7 @@ open class Repeat : Equatable {
 	
 	deinit {
 		self.observers.removeAll()
+		self.pause()
 		self.destroyTimer()
 	}
 	
