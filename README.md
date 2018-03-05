@@ -122,7 +122,7 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.2.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
+Latest version of Repeat is [0.3.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
 
 **Changelog - 0.3.0**:
 
