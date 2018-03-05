@@ -30,7 +30,7 @@
 
 import Foundation
 
-open class Repeat : Equatable {
+open class Repeater : Equatable {
 	
 	/// State of the timer
 	///
@@ -137,7 +137,7 @@ open class Repeat : Equatable {
 	}
 	
 	/// Handler typealias
-	public typealias Observer = ((Repeat) -> (Void))
+	public typealias Observer = ((Repeater) -> (Void))
 	
 	/// Token assigned to the observer
 	public typealias ObserverToken = UInt64
@@ -150,7 +150,7 @@ open class Repeat : Equatable {
 	}
 	
 	/// Callback called to intercept state's change of the timer
-	public var onStateChanged: ((_ timer: Repeat, _ state: State) -> (Void))? = nil
+	public var onStateChanged: ((_ timer: Repeater, _ state: State) -> (Void))? = nil
 	
 	/// List of the observer of the timer
 	private var observers = [ObserverToken : Observer]()
@@ -270,8 +270,8 @@ open class Repeat : Equatable {
 	///   - handler: handler to call
 	/// - Returns: created timer
 	@discardableResult
-	public class func once(after interval: Interval, _ observer: @escaping Observer) -> Repeat {
-		let timer = Repeat(interval: interval, mode: .once, observer: observer)
+	public class func once(after interval: Interval, _ observer: @escaping Observer) -> Repeater {
+		let timer = Repeater(interval: interval, mode: .once, observer: observer)
 		timer.start()
 		return timer
 	}
@@ -284,9 +284,9 @@ open class Repeat : Equatable {
 	///   - handler: handler to call on fire
 	/// - Returns: timer
 	@discardableResult
-	public class func every(_ interval: Interval, count: Int? = nil, _ handler: @escaping Observer) -> Repeat {
+	public class func every(_ interval: Interval, count: Int? = nil, _ handler: @escaping Observer) -> Repeater {
 		let mode: Mode = (count != nil ? .finite(count!) : .infinite)
-		let timer = Repeat(interval: interval, mode: mode, observer: handler)
+		let timer = Repeater(interval: interval, mode: mode, observer: handler)
 		timer.start()
 		return timer
 	}
@@ -405,7 +405,7 @@ open class Repeat : Equatable {
 		self.destroyTimer()
 	}
 	
-	public static func == (lhs: Repeat, rhs: Repeat) -> Bool {
+	public static func == (lhs: Repeater, rhs: Repeater) -> Bool {
 		return (lhs.id == rhs.id)
 	}
 }

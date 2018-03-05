@@ -27,7 +27,7 @@ Main features offered by Repeat are:
 The following code create a timer which fires a single time after 5 seconds.
 
 ```swift
-Repeat.once(after: .seconds(5)) { timer in
+Repeater.once(after: .seconds(5)) { timer in
   // do something	
 }
 ```
@@ -37,7 +37,7 @@ Repeat.once(after: .seconds(5)) { timer in
 The following code create a recurrent timer: it will fire every 10 minutes for 5 times, then stops.
 
 ```swift
-Repeat.every(.minutes(10), count: 5) { timer  in
+Repeater.every(.minutes(10), count: 5) { timer  in
   // do something		
 }
 ```
@@ -47,7 +47,7 @@ Repeat.every(.minutes(10), count: 5) { timer  in
 The following code create a recurrent timer which fires every hour until it is manually stopped .
 
 ```swift
-Repeat.every(.hours(1)) { timer in
+Repeater.every(.hours(1)) { timer in
   // do something
 }
 ```
@@ -57,7 +57,7 @@ Repeat.every(.hours(1)) { timer in
 You can create a new instance of timer and start as needed by calling the `start()` function.
 
 ```swift
-let timer = Repeat(interval: .seconds(5), mode: .infinite) { _ in
+let timer = Repeater(interval: .seconds(5), mode: .infinite) { _ in
 	// do something		
 }
 timer.start()
@@ -122,7 +122,15 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.2.0](https://github.com/malcommac/Repeat/releases/tag/0.2.0) published on 2018/03/04.
+Latest version of Repeat is [0.2.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
+
+**Changelog - 0.3.0**:
+
+* [#7](https://github.com/malcommac/Repeat/issues/7): Renamed `Repeat` in `Repeater` in order to avoid collision with `Swift.Repeat`.
+
+**Changelog - 0.2.1**:
+
+* [#6](https://github.com/malcommac/Repeat/issues/6): Fixed crash on `deinit()` a running timer.
 
 **Changelog - 0.2.0**:
 

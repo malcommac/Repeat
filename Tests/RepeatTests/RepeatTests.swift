@@ -1,5 +1,5 @@
 //
-//  RepeatTests.swift
+//  RepeaterTests.swift
 //  Repeat
 //
 //  Created by Daniele Margutti on 20/02/2018.
@@ -14,37 +14,35 @@ class RepeatTests: XCTestCase {
 	
 	private var timerInstance: Any? = nil
 	
-	/*func test_fireManually() {
+	func test_fireManually() {
 		let exp = expectation(description: "test_infiniteReset")
 
-		var count: Int = 0
-		let t = Repeat(interval: .seconds(0.5), mode: .infinite) { t in
+		let timer = Repeater(interval: .seconds(0.5), mode: .infinite) { t in
 			print("Fired")
-
 		}
 		
-		t.onStateChanged = { (_,state) in
-			if state == .finished {
-				exp.fullfill()
+		timer.onStateChanged = { (_,state) in
+			if state == .paused {
+				exp.fulfill()
 				timer.pause()
 			}
 		}
 
 		DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-			t.fire(andPause: true)
+			timer.fire(andPause: true)
 		}
 		
-		t.start()
-		self.timerInstance = t
+		timer.start()
+		self.timerInstance = timer
 		
 		wait(for: [exp], timeout: 30)
-	}*/
+	}
 	
 	func test_pauseResetStart() {
 		let exp = expectation(description: "test_infiniteReset")
 
 		var count: Int = 0
-		let timer = Repeat(interval: .seconds(0.5), mode: .infinite) { t in
+		let timer = Repeater(interval: .seconds(0.5), mode: .infinite) { t in
 		
 			count += 1
 			
@@ -71,7 +69,7 @@ class RepeatTests: XCTestCase {
 		let exp = expectation(description: "test_infiniteReset")
 
 		var count: Int = 0
-		let timer = Repeat(interval: .seconds(0.5), mode: .infinite) { t in
+		let timer = Repeater(interval: .seconds(0.5), mode: .infinite) { t in
 			count += 1
 			print("Iteration #\(count)")
 			if count == 5 {
@@ -91,7 +89,7 @@ class RepeatTests: XCTestCase {
 
 		var count: Int = 0
 		var finishedFirstTime: Bool = false
-		let timer = Repeat(interval: .seconds(0.5), mode: .finite(5)) { _ in
+		let timer = Repeater(interval: .seconds(0.5), mode: .finite(5)) { _ in
 			count += 1
 			print("Iteration #\(count)")
 		}
@@ -119,7 +117,7 @@ class RepeatTests: XCTestCase {
 		let exp = expectation(description: "test_once")
 
 		var count: Int = 0
-		self.timerInstance = Repeat.every(.seconds(0.5), { _ in
+		self.timerInstance = Repeater.every(.seconds(0.5), { _ in
 			count += 1
 			if count == 20 {
 				exp.fulfill()
@@ -132,7 +130,7 @@ class RepeatTests: XCTestCase {
 	func test_once() {
 		let exp = expectation(description: "test_once")
 		
-		self.timerInstance = Repeat.once(after: .seconds(5)) { _ in
+		self.timerInstance = Repeater.once(after: .seconds(5)) { _ in
 			exp.fulfill()
 		}
 		
@@ -144,7 +142,7 @@ class RepeatTests: XCTestCase {
 		
 		var repetitions: Int = 0
 		
-		self.timerInstance = Repeat.once(after: .seconds(5)) { t in
+		self.timerInstance = Repeater.once(after: .seconds(5)) { t in
 			repetitions += 1
 			switch repetitions {
 			case 1:
