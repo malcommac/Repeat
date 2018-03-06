@@ -164,7 +164,7 @@ Latest version of Repeat is [0.3.0](https://github.com/malcommac/Repeat/releases
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like Repeat in your projects. You can install it with the following command:
 
 ```bash
-$ gem install cocoapods
+$ sudo gem install cocoapods
 ```
 
 > CocoaPods 1.0.1+ is required to build Repeat.
