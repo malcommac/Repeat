@@ -171,7 +171,7 @@ open class Repeater : Equatable {
 	private var interval: Interval
 	
 	/// Accuracy of the timer
-	private var torelance: DispatchTimeInterval
+	private var tolerance: DispatchTimeInterval
 	
 	/// Dispatch queue parent of the timer
 	private var queue: DispatchQueue? = nil
@@ -184,17 +184,17 @@ open class Repeater : Equatable {
 	/// - Parameters:
 	///   - interval: interval of the timer
 	///   - mode: mode of the timer
-	///   - torelance: tolerance of the timer, 0 is default.
+	///   - tolerance: tolerance of the timer, 0 is default.
 	///   - queue: queue in which the timer should be executed; if `nil` a new queue is created automatically.
 	///   - observer: observer
 	public init(interval: Interval,
 				mode: Mode = .infinite,
-				torelance: DispatchTimeInterval = .nanoseconds(0),
+				tolerance: DispatchTimeInterval = .nanoseconds(0),
 				queue: DispatchQueue? = nil,
 				observer: @escaping Observer) {
 		self.mode = mode
 		self.interval = interval
-		self.torelance = torelance
+		self.tolerance = tolerance
 		self.remainingIterations = mode.countIterations
 		self.queue = (queue ?? DispatchQueue(label: "com.repeat.queue"))
 		self.timer = configureTimer()
@@ -242,9 +242,9 @@ open class Repeater : Equatable {
 		let repatInterval = interval.value
 		let deadline: DispatchTime = (DispatchTime.now() + repatInterval)
 		if self.mode.isRepeating {
-			timer.schedule(deadline: deadline, repeating: repatInterval, leeway: torelance)
+			timer.schedule(deadline: deadline, repeating: repatInterval, leeway: tolerance)
 		} else {
-			timer.schedule(deadline: deadline, leeway: torelance)
+			timer.schedule(deadline: deadline, leeway: tolerance)
 		}
 		
 		timer.setEventHandler { [weak self] in
