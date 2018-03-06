@@ -20,6 +20,23 @@ Main features offered by Repeat are:
 * Ability to pause , start , resume and reset our timer without allocating a new instance.
 * Ability to set different repeat modes (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
 
+## Other Libraries You May Like
+
+I'm also working on several other projects you may like.
+Take a look below:
+
+<p align="center" >
+
+| Library         | Description                                      |
+|-----------------|--------------------------------------------------|
+| [**SwiftDate**](https://github.com/malcommac/SwiftDate)       | The best way to manage date/timezones in Swift   |
+| [**Hydra**](https://github.com/malcommac/Hydra)           | Write better async code: async/await & promises  |
+| [**Flow**](https://github.com/malcommac/Flow) | A new declarative approach to table managment. Forget datasource & delegates. |
+| [**SwiftRichString**](https://github.com/malcommac/SwiftRichString) | Elegant & Painless NSAttributedString in Swift   |
+| [**SwiftLocation**](https://github.com/malcommac/SwiftLocation)   | Efficient location manager                       |
+| [**SwiftMsgPack**](https://github.com/malcommac/SwiftMsgPack)    | Fast/efficient msgPack encoder/decoder           |
+</p>
+
 ## Examples
 
 ### Create single fire timer
@@ -27,7 +44,7 @@ Main features offered by Repeat are:
 The following code create a timer which fires a single time after 5 seconds.
 
 ```swift
-Repeat.once(after: .seconds(5)) { timer in
+Repeater.once(after: .seconds(5)) { timer in
   // do something	
 }
 ```
@@ -37,7 +54,7 @@ Repeat.once(after: .seconds(5)) { timer in
 The following code create a recurrent timer: it will fire every 10 minutes for 5 times, then stops.
 
 ```swift
-Repeat.every(.minutes(10), count: 5) { timer  in
+Repeater.every(.minutes(10), count: 5) { timer  in
   // do something		
 }
 ```
@@ -47,7 +64,7 @@ Repeat.every(.minutes(10), count: 5) { timer  in
 The following code create a recurrent timer which fires every hour until it is manually stopped .
 
 ```swift
-Repeat.every(.hours(1)) { timer in
+Repeater.every(.hours(1)) { timer in
   // do something
 }
 ```
@@ -57,7 +74,7 @@ Repeat.every(.hours(1)) { timer in
 You can create a new instance of timer and start as needed by calling the `start()` function.
 
 ```swift
-let timer = Repeat(interval: .seconds(5), mode: .infinite) { _ in
+let timer = Repeater(interval: .seconds(5), mode: .infinite) { _ in
   // do something		
 }
 timer.start()
@@ -67,8 +84,14 @@ Other functions are:
 
 * `start()`: start a paused or newly created timer
 * `pause()`: pause a running timer
-* `reset(_ interval: Interval)`: reset a running timer, change the interval and restart again
+* `reset(_ interval: Interval, restart: Bool)`: reset a running timer, change the interval and restart again if set.
 * `fire()`: manually fire an event of the timer from an external source
+
+Properties:
+
+* `.id`: unique identifier of the timer
+* `.mode`: define the type of timer (`infinite`,`finite`,`once`)
+* `.remainingIterations`: for a `.finite` mode it contains the remaining number of iterations before it finishes.
 
 ### Adding/Removing Observers
 
@@ -87,6 +110,23 @@ You can remove an observer by using the token:
 ```swift 
 timer.remove(token)
 ```
+
+### Observing state change
+
+Each timer can be in one of the following states, you can observe via `.state` property:
+
+* `.paused`: timer is in idle (never started yet) or paused
+* `.running`: timer is currently active and running
+* `.finished`: timer lifecycle is finished (it's valid for a finite/once state timer)
+
+You can listen for state change by assigning a function callback for `.onStateChanged` property.
+
+```swift
+timer.onStateChanged = { (timer,newState) in
+	// your own code
+}
+```
+
 ## Requirements
 
 Repeat is compatible with Swift 4.x.
@@ -97,6 +137,24 @@ All Apple platforms are supported:
 * watchOS 2.0+
 * tvOS 9.0+
 
+## Latest Version
+
+Latest version of Repeat is [0.3.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
+
+**Changelog - 0.3.0**:
+
+* [#7](https://github.com/malcommac/Repeat/issues/7): Renamed `Repeat` in `Repeater` in order to avoid collision with `Swift.Repeat`.
+
+**Changelog - 0.2.1**:
+
+* [#6](https://github.com/malcommac/Repeat/issues/6): Fixed crash on `deinit()` a running timer.
+
+**Changelog - 0.2.0**:
+
+* [#1](https://github.com/malcommac/Repeat/issues/3): Fixed CocoaPods installation
+* [#2](https://github.com/malcommac/Repeat/issues/2): Fixed leaks with GCD while deallocating dispatch queue
+* [#3](https://github.com/malcommac/Repeat/issues/3): Refactoring timer's state using a `State` enum which define the possible states of the timer (`paused`,`running` or `finished`).
+
 ## Installation
 
 <a name="cocoapods" />
@@ -106,7 +164,7 @@ All Apple platforms are supported:
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like Repeat in your projects. You can install it with the following command:
 
 ```bash
-$ gem install cocoapods
+$ sudo gem install cocoapods
 ```
 
 > CocoaPods 1.0.1+ is required to build Repeat.

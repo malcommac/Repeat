@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Repeat"
-  s.version      = "0.1.0"
+  s.version      = "0.3.0"
   s.summary      = "Modern NSTimer alternative in Swift"
   s.description  = <<-DESC
 	Repeat is a modern alternative to NSTimer; no strong references, multiple observers, reusable instances with start/stop/pause support in swifty syntax.
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.9"
   s.watchos.deployment_target = "2.0"
   s.tvos.deployment_target = "9.0"
-  s.source       = { :git => ".git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/malcommac/Repeat.git", :tag => s.version.to_s }
   s.source_files  = "Sources/**/*"
   s.frameworks  = "Foundation"
   s.swift_version = '4.0'
