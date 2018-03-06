@@ -20,6 +20,23 @@ Main features offered by Repeat are:
 * Ability to pause , start , resume and reset our timer without allocating a new instance.
 * Ability to set different repeat modes (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
 
+## Other Libraries You May Like
+
+I'm also working on several other projects you may like.
+Take a look below:
+
+<p align="center" >
+
+| Library         | Description                                      |
+|-----------------|--------------------------------------------------|
+| [**SwiftDate**](https://github.com/malcommac/SwiftDate)       | The best way to manage date/timezones in Swift   |
+| [**Hydra**](https://github.com/malcommac/Hydra)           | Write better async code: async/await & promises  |
+| [**Flow**](https://github.com/malcommac/Flow) | A new declarative approach to table managment. Forget datasource & delegates. |
+| [**SwiftRichString**](https://github.com/malcommac/SwiftRichString) | Elegant & Painless NSAttributedString in Swift   |
+| [**SwiftLocation**](https://github.com/malcommac/SwiftLocation)   | Efficient location manager                       |
+| [**SwiftMsgPack**](https://github.com/malcommac/SwiftMsgPack)    | Fast/efficient msgPack encoder/decoder           |
+</p>
+
 ## Examples
 
 ### Create single fire timer
@@ -58,7 +75,7 @@ You can create a new instance of timer and start as needed by calling the `start
 
 ```swift
 let timer = Repeater(interval: .seconds(5), mode: .infinite) { _ in
-	// do something		
+  // do something		
 }
 timer.start()
 ```
@@ -83,7 +100,7 @@ Timer instance received in callback is weak.
 
 ```swift
 let token = timer.observe { _ in
-	// a new observer is called		
+  // a new observer is called		
 }
 timer.start()
 ```
@@ -122,7 +139,7 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.2.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
+Latest version of Repeat is [0.3.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
 
 **Changelog - 0.3.0**:
 
@@ -147,7 +164,7 @@ Latest version of Repeat is [0.2.0](https://github.com/malcommac/Repeat/releases
 [CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like Repeat in your projects. You can install it with the following command:
 
 ```bash
-$ gem install cocoapods
+$ sudo gem install cocoapods
 ```
 
 > CocoaPods 1.0.1+ is required to build Repeat.
