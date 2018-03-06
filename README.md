@@ -139,7 +139,11 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.3.0](https://github.com/malcommac/Repeat/releases/tag/0.3.0) published on 2018/03/05.
+Latest version of Repeat is [0.3.1](https://github.com/malcommac/Repeat/releases/tag/0.3.1) published on 2018/03/06.
+
+**Changelog - 0.3.1**:
+
+* [#8](https://github.com/malcommac/Repeat/issues/8): Disabled Gather Coverage Data to enable successfully Carthage builds.
 
 **Changelog - 0.3.0**:
 
