@@ -239,10 +239,10 @@ open class Repeater : Equatable {
 	/// - Returns: dispatch timer
 	private func configureTimer() -> DispatchSourceTimer {
 		let timer = DispatchSource.makeTimerSource(queue: (queue ?? DispatchQueue(label: "com.repeat.queue")))
-		let repatInterval = interval.value
-		let deadline: DispatchTime = (DispatchTime.now() + repatInterval)
+		let repeatInterval = interval.value
+		let deadline: DispatchTime = (DispatchTime.now() + repeatInterval)
 		if self.mode.isRepeating {
-			timer.schedule(deadline: deadline, repeating: repatInterval, leeway: tolerance)
+			timer.schedule(deadline: deadline, repeating: repeatInterval, leeway: tolerance)
 		} else {
 			timer.schedule(deadline: deadline, leeway: tolerance)
 		}
