@@ -117,6 +117,7 @@ Each timer can be in one of the following states, you can observe via `.state` p
 
 * `.paused`: timer is in idle (never started yet) or paused
 * `.running`: timer is currently active and running
+* `.executing`: registered observers are being executed
 * `.finished`: timer lifecycle is finished (it's valid for a finite/once state timer)
 
 You can listen for state change by assigning a function callback for `.onStateChanged` property.
@@ -139,7 +140,12 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.3.1](https://github.com/malcommac/Repeat/releases/tag/0.3.1) published on 2018/03/06.
+Latest version of Repeat is [0.3.2](https://github.com/malcommac/Repeat/releases/tag/0.3.1) published on 2018/03/13.
+
+
+**Changelog - 0.3.2**:
+
+* [#11](https://github.com/malcommac/Repeat/pull/11): Fixed an issue attempting to restart an `once` timer (thanks to [Thanh Pham](https://github.com/T-Pham)). Added `executing` state.
 
 **Changelog - 0.3.1**:
 
