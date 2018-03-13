@@ -212,6 +212,7 @@ open class Repeater : Equatable {
 			self.nextObserverID = 0
 			new = 0
 		}
+		self.nextObserverID = new
 		self.observers[new] = observer
 		return new
 	}
