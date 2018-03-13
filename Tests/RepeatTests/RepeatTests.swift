@@ -146,7 +146,7 @@ class RepeatTests: XCTestCase {
 			repetitions += 1
 			switch repetitions {
 			case 1:
-				t.start()
+				t.reset(nil, restart: true)
 			default:
 				exp.fulfill()
 			}
