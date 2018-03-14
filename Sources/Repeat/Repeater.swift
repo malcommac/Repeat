@@ -187,7 +187,8 @@ open class Repeater : Equatable {
 	private var queue: DispatchQueue? = nil
 	
 	/// Unique identifier
-	public let id: UUID = UUID()
+  @available(*, deprecated, message: "Please use the equal-to operator (==) instead")
+	public let id = UUID()
 	
 	/// Initialize a new timer.
 	///
@@ -421,6 +422,6 @@ open class Repeater : Equatable {
 	}
 	
 	public static func == (lhs: Repeater, rhs: Repeater) -> Bool {
-		return (lhs.id == rhs.id)
+		return lhs === rhs
 	}
 }
