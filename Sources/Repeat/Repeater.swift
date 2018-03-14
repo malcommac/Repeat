@@ -187,7 +187,7 @@ open class Repeater : Equatable {
 	private var queue: DispatchQueue? = nil
 	
 	/// Unique identifier
-  @available(*, deprecated, message: "Please use the equal-to operator (==) instead")
+	@available(*, deprecated, message: "Please use the equal-to operator (==) instead")
 	public let id = UUID()
 	
 	/// Initialize a new timer.
