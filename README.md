@@ -9,11 +9,16 @@
 Created by Daniele Margutti - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
 </p>
 
+
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
 Repeat is based upon GCD - Grand Central Dispatch. 
 It also support debouncer and throttler features.
 
-**› Learn More**: If you want to learn more about it check out [my article on Medium](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
+## A deep look at Timers
+
+If you want to learn more about it check out my article on Medium: [**"The secret world of NSTimer"**](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
+
+## Main Features
 
 Main features offered by Repeat are:
 
@@ -22,6 +27,11 @@ Main features offered by Repeat are:
 * Support multiple observers to receive fire events from timer.
 * Ability to pause , start , resume and reset our timer without allocating a new instance.
 * Ability to set different repeat modes (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
+
+Moreover Repeat also provide supports for:
+
+* **Debouncer**: Debouncer will delay a function call, and every time it's getting called it will delay the preceding call until the delay time is over.
+* **Throttler**: Throttling wraps a block of code with throttling logic, guaranteeing that an action will never be called more than once each specified interval.
 
 ## Other Libraries You May Like
 
