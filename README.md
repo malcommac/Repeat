@@ -6,7 +6,7 @@
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
 <p align="center" >★★ <b>Star me to follow the project! </b> ★★<br>
-Created by Daniele Margutti - [danielemargutti.com](http://www.danielemargutti.com)
+Created by Daniele Margutti - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
 </p>
 
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
