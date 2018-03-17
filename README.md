@@ -6,7 +6,7 @@
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
 <p align="center" >★★ <b>Star me to follow the project! </b> ★★<br>
-Created by Daniele Margutti - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
+Created by **Daniele Margutti** - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
 </p>
 
 
@@ -18,15 +18,15 @@ It also support debouncer and throttler features.
 
 If you want to learn more about it check out my article on Medium: [**"The secret world of NSTimer"**](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
 
-## Main Features
+## Features Highlights
 
 Main features offered by Repeat are:
 
-* Simple, less verbose APIs methods to create and manage our timer. Just call `every()` or `once` to create a new Timer even in background thread.
-* Avoid strong reference to the destination target and avoid NSObject inheritance.
-* Support multiple observers to receive fire events from timer.
-* Ability to pause , start , resume and reset our timer without allocating a new instance.
-* Ability to set different repeat modes (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
+* **Simple, less verbose APIs** methods to create and manage our timer. Just call `every()` or `once` to create a new Timer even in background thread.
+* **Avoid strong references** to the destination target and avoid NSObject inheritance.
+* Support **multiple observers** to receive fire events from timer.
+* Ability to **pause , start , resume and reset** our timer without allocating a new instance.
+* Ability to set **different repeat modes** (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
 
 Moreover Repeat also provide supports for:
 
