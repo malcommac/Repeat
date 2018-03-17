@@ -1,24 +1,37 @@
-# Repeat: modern NSTimer in GCD
+# Repeat - modern NSTimer in GCD, debouncer and throttler
 
 [![Version](https://img.shields.io/cocoapods/v/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![License](https://img.shields.io/cocoapods/l/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![Platform](https://img.shields.io/cocoapods/p/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Repeat.svg)](https://img.shields.io/cocoapods/v/Repeat.svg)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
-<p align="center" >★★ <b>Star me to follow the project! </b> ★★</p>
+<p align="center" >★★ <b>Star me to follow the project! </b> ★★<br>
+Created by **Daniele Margutti** - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
+</p>
+
 
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
 Repeat is based upon GCD - Grand Central Dispatch. 
+It also support debouncer and throttler features.
 
-**› Learn More**: If you want to learn more about it check out [my article on Medium](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
+## A deep look at Timers
+
+If you want to learn more about it check out my article on Medium: [**"The secret world of NSTimer"**](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
+
+## Features Highlights
 
 Main features offered by Repeat are:
 
-* Simple, less verbose APIs methods to create and manage our timer. Just call `every()` or `once` to create a new Timer even in background thread.
-* Avoid strong reference to the destination target and avoid NSObject inheritance.
-* Support multiple observers to receive fire events from timer.
-* Ability to pause , start , resume and reset our timer without allocating a new instance.
-* Ability to set different repeat modes (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
+* **Simple, less verbose APIs** methods to create and manage our timer. Just call `every()` or `once` to create a new Timer even in background thread.
+* **Avoid strong references** to the destination target and avoid NSObject inheritance.
+* Support **multiple observers** to receive fire events from timer.
+* Ability to **pause , start , resume and reset** our timer without allocating a new instance.
+* Ability to set **different repeat modes** (`infinite` : infinite sequence of fires, at regular intervals, `finite` : a finite sequence of fires, at regular intervals, `once` : a single fire events at specified interval since start).
+
+Moreover Repeat also provide supports for:
+
+* **Debouncer**: Debouncer will delay a function call, and every time it's getting called it will delay the preceding call until the delay time is over.
+* **Throttler**: Throttling wraps a block of code with throttling logic, guaranteeing that an action will never be called more than once each specified interval.
 
 ## Other Libraries You May Like
 
@@ -37,9 +50,16 @@ Take a look below:
 | [**SwiftMsgPack**](https://github.com/malcommac/SwiftMsgPack)    | Fast/efficient msgPack encoder/decoder           |
 </p>
 
-## Examples
+## Documentation
+* [Timer](#timer)
+* [Debouncer](#debouncer)
+* [Throttler](#throttler)
 
-### Create single fire timer
+<a name="timer"/>
+
+### Timer
+
+#### Create single fire timer
 
 The following code create a timer which fires a single time after 5 seconds.
 
@@ -49,7 +69,7 @@ Repeater.once(after: .seconds(5)) { timer in
 }
 ```
 
-### Create recurrent finite timer
+#### Create recurrent finite timer
 
 The following code create a recurrent timer: it will fire every 10 minutes for 5 times, then stops.
 
@@ -59,7 +79,7 @@ Repeater.every(.minutes(10), count: 5) { timer  in
 }
 ```
 
-### Create recurrent infinite timer
+#### Create recurrent infinite timer
 
 The following code create a recurrent timer which fires every hour until it is manually stopped .
 
@@ -69,7 +89,7 @@ Repeater.every(.hours(1)) { timer in
 }
 ```
 
-### Manage a timer
+#### Manage a timer
 
 You can create a new instance of timer and start as needed by calling the `start()` function.
 
@@ -93,7 +113,7 @@ Properties:
 * `.mode`: define the type of timer (`infinite`,`finite`,`once`)
 * `.remainingIterations`: for a `.finite` mode it contains the remaining number of iterations before it finishes.
 
-### Adding/Removing Observers
+#### Adding/Removing Observers
 
 By default a new timer has a single observer specified by the init functions. You can, however, create additional observer by using `observe()` function. The result of this call is a token identifier you can use to remove the observer in a second time.
 Timer instance received in callback is weak.
@@ -111,7 +131,7 @@ You can remove an observer by using the token:
 timer.remove(token)
 ```
 
-### Observing state change
+#### Observing state change
 
 Each timer can be in one of the following states, you can observe via `.state` property:
 
@@ -127,6 +147,46 @@ timer.onStateChanged = { (timer,newState) in
 	// your own code
 }
 ```
+<a name="debouncer"/>
+
+### Debouncer
+
+Since 0.5 Repeater introduced `Debouncer` class.
+The Debouncer will delay a function call, and every time it's getting called it will delay the preceding call until the delay time is over.
+
+The debounce function is an extremely useful tool that can help throttle requests.
+It is different to throttle though as throttle will allow only one request per time period, debounce will not fire immediately and wait the specified time period before firing the request.
+If there is another request made before the end of the time period then we restart the count. This can be extremely useful for calling functions that often get called and are only needed to run once after all the changes have been made.
+
+```swift
+let debouncer = Debouncer(.seconds(10))
+debouncer.callback = {
+	// your code here
+}
+
+// Call debouncer to start the callback after the delayed time.
+// Multiple calls will ignore the older calls and overwrite the firing time.
+debouncer.call()
+```
+
+(Make sure to check out the Unit Tests for further code samples.)
+
+<a name="throttler"/>
+
+### Throttler
+
+Since 0.5 Repeater introduced `Throttler` class.
+
+Throttling wraps a block of code with throttling logic, guaranteeing that an action will never be called more than once each specified interval. Only the last dispatched code-block will be executed when delay has passed.
+
+```swift
+let throttler = Throttler(time: .milliseconds(500), {
+  // your code here
+})
+
+// Call throttler. Defined block will never be called more than once each specified interval.
+throttler.call()
+```
 
 ## Requirements
 
@@ -140,30 +200,8 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.3.2](https://github.com/malcommac/Repeat/releases/tag/0.3.1) published on 2018/03/13.
-
-
-**Changelog - 0.3.2**:
-
-* [#11](https://github.com/malcommac/Repeat/pull/11): Fixed an issue attempting to restart an `once` timer (thanks to [Thanh Pham](https://github.com/T-Pham)). Added `executing` state.
-
-**Changelog - 0.3.1**:
-
-* [#8](https://github.com/malcommac/Repeat/issues/8): Disabled Gather Coverage Data to enable successfully Carthage builds.
-
-**Changelog - 0.3.0**:
-
-* [#7](https://github.com/malcommac/Repeat/issues/7): Renamed `Repeat` in `Repeater` in order to avoid collision with `Swift.Repeat`.
-
-**Changelog - 0.2.1**:
-
-* [#6](https://github.com/malcommac/Repeat/issues/6): Fixed crash on `deinit()` a running timer.
-
-**Changelog - 0.2.0**:
-
-* [#1](https://github.com/malcommac/Repeat/issues/3): Fixed CocoaPods installation
-* [#2](https://github.com/malcommac/Repeat/issues/2): Fixed leaks with GCD while deallocating dispatch queue
-* [#3](https://github.com/malcommac/Repeat/issues/3): Refactoring timer's state using a `State` enum which define the possible states of the timer (`paused`,`running` or `finished`).
+Latest version of Repeat is [0.5.0](https://github.com/malcommac/Repeat/releases/tag/0.5.0) published on 2018/03/17.
+Full changelog is available in [CHANGELOG.md](CHANGELOG.md) file.
 
 ## Installation
 

@@ -13,8 +13,129 @@ import Repeat
 class RepeatTests: XCTestCase {
 	
 	private var timerInstance: Any? = nil
+	private var debouncerInstance: Debouncer? = nil
+	private var throttle: Throttler? = nil
+
+	func test_throttle() {
+		let exp = expectation(description: "Run once and call immediately")
+
+		var value = 0
+		self.throttle = Throttler(time: .milliseconds(500), {
+			value += 1
+		})
+		
+		self.throttle?.call()
+		self.throttle?.call()
+		self.throttle?.call()
+		self.throttle?.call()
+		self.throttle?.call()
+
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+			if value == 1 {
+				exp.fulfill()
+			} else {
+				XCTFail("Failed to throttle, calls were not ignored.")
+			}
+		}
+
+		self.wait(for: [exp], timeout: 1)
+	}
 	
-	func test_fireManually() {
+	func test_debounce_callWithoutCallback(){
+		
+		let d = Debouncer(.seconds(0))
+		
+		d.call()
+		XCTAssertTrue(true)
+	}
+	
+	func test_debounce_runOnceImmediatly(){
+		let e = expectation(description: "Run once and call immediatly")
+		
+		let d = Debouncer(.seconds(0))
+		d.callback = {
+			e.fulfill()
+		}
+		
+		d.call()
+		
+		self.wait(for: [e], timeout: 1)
+	}
+	
+	func test_debounce_runThreeTimesCountTwice(){
+		let e = expectation(description: "should fulfill three times")
+		e.expectedFulfillmentCount = 2
+		let d = Debouncer(.seconds(1))
+		d.callback = {
+			e.fulfill()
+		}
+		d.call()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+			d.call()
+		})
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
+			d.call()
+		})
+		
+		// Wait timeout in seconds
+		self.wait(for: [e], timeout: 2)
+	}
+	
+	func test_debounce_runThreeTimseeCountThreeTimes(){
+		let e = expectation(description: "should fulfill three times")
+		e.expectedFulfillmentCount = 3
+		let d = Debouncer(.seconds(1))
+		d.callback = {
+			e.fulfill()
+		}
+		d.call()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+			d.call()
+		})
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+			d.call()
+		})
+		
+		// Wait timeout in seconds
+		self.wait(for: [e], timeout: 3)
+	}
+	
+	func test_debounce_runTwiceCountTwice(){
+		let e = expectation(description: "should fulfill twice")
+		e.expectedFulfillmentCount = 2
+		let d = Debouncer(.seconds(1))
+		d.callback = {
+			e.fulfill()
+		}
+		d.call()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+			d.call()
+		})
+		
+		// Wait timeout in seconds
+		self.wait(for: [e], timeout: 3)
+	}
+	
+	func test_debounce_runTwiceCountOnce() {
+		
+		let exp = expectation(description: "should fullfile once, because calls are both runned immediatly and second one should get ignored")
+		exp.expectedFulfillmentCount = 1
+		
+		let debouncer = Debouncer(.seconds(1), callback: {
+			exp.fulfill()
+		})
+
+		debouncer.call()
+		debouncer.call()
+		
+		self.debouncerInstance = debouncer
+		wait(for: [exp], timeout: 30)
+	}
+	
+	func test_debounce_fireManually() {
 		let exp = expectation(description: "test_infiniteReset")
 
 		let timer = Repeater(interval: .seconds(0.5), mode: .infinite) { t in
@@ -38,7 +159,7 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 30)
 	}
 	
-	func test_pauseResetStart() {
+	func test_timer_pauseResetStart() {
 		let exp = expectation(description: "test_infiniteReset")
 
 		var count: Int = 0
@@ -65,7 +186,7 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 30)
 	}
 	
-	func test_infiniteReset() {
+	func test_timer_infiniteReset() {
 		let exp = expectation(description: "test_infiniteReset")
 
 		var count: Int = 0
@@ -84,7 +205,7 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 30)
 	}
 	
-	func test_finiteAndRestart() {
+	func test_timer_finiteAndRestart() {
 		let exp = expectation(description: "test_finiteAndRestart")
 
 		var count: Int = 0
@@ -113,7 +234,7 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 30)
 	}
 	
-	func test_infinite() {
+	func test_timer_infinite() {
 		let exp = expectation(description: "test_once")
 
 		var count: Int = 0
@@ -127,7 +248,7 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 10)
 	}
 	
-	func test_once() {
+	func test_timer_once() {
 		let exp = expectation(description: "test_once")
 		
 		self.timerInstance = Repeater.once(after: .seconds(5)) { _ in
@@ -137,7 +258,7 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 6)
 	}
 	
-	func test_onceRestart() {
+	func test_timer_onceRestart() {
 		let exp = expectation(description: "test_onceRestart")
 		
 		var repetitions: Int = 0

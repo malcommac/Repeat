@@ -1,7 +1,7 @@
 //
 //	Repeat
-//	A modern alternative to NSTimer made in GCD.
-//	------------------------------------------------
+//	A modern alternative to NSTimer made in GCD with debouncer and throttle
+//	-----------------------------------------------------------------------
 //	Created by:	Daniele Margutti
 //				hello@danielemargutti.com
 //				http://www.danielemargutti.com
