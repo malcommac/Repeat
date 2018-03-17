@@ -6,7 +6,7 @@
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
 <p align="center" >★★ <b>Star me to follow the project! </b> ★★<br>
-Created by **Daniele Margutti** - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
+Created by <b>Daniele Margutti</b> - <a href="http://www.danielemargutti.com">danielemargutti.com</a>
 </p>
 
 
