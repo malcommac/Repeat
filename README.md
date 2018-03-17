@@ -164,8 +164,10 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.3.2](https://github.com/malcommac/Repeat/releases/tag/0.3.1) published on 2018/03/13.
+Latest version of Repeat is [0.5.0](https://github.com/malcommac/Repeat/releases/tag/0.5.0) published on 2018/03/17.
 
+**Changelog - 0.5.0**:
+* [#15](https://github.com/malcommac/Repeat/pull/15): Added `Debouncer` support.
 
 **Changelog - 0.3.2**:
 
