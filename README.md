@@ -1,4 +1,4 @@
-# Repeat: modern NSTimer in GCD
+# Repeat: modern NSTimer in GCD, debouncer and throttler
 
 [![Version](https://img.shields.io/cocoapods/v/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![License](https://img.shields.io/cocoapods/l/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![Platform](https://img.shields.io/cocoapods/p/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Repeat.svg)](https://img.shields.io/cocoapods/v/Repeat.svg)
@@ -9,6 +9,7 @@
 
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
 Repeat is based upon GCD - Grand Central Dispatch. 
+It also support debouncer and throttler features.
 
 **› Learn More**: If you want to learn more about it check out [my article on Medium](https://medium.com/@danielemargutti/the-secret-world-of-nstimer-708f508c9eb).
 
@@ -127,6 +128,29 @@ timer.onStateChanged = { (timer,newState) in
 	// your own code
 }
 ```
+
+## Debouncer
+Since 0.5 Repeater introduced `Debouncer` class.
+The Debouncer will delay a function call, and every time it's getting called it will delay the preceding call until the delay time is over.
+
+The debounce function is an extremely useful tool that can help throttle requests.
+It is different to throttle though as throttle will allow only one request per time period, debounce will not fire immediately and wait the specified time period before firing the request.
+If there is another request made before the end of the time period then we restart the count. This can be extremely useful for calling functions that often get called and are only needed to run once after all the changes have been made.
+
+```swift
+let debouncer = Debouncer(.seconds(10))
+debouncer.callback = {
+	// your code here
+}
+
+// Call debouncer to start the callback after the delayed time.
+// Multiple calls will ignore the older calls and overwrite the firing time.
+debouncer.call()
+```
+
+(Make sure to check out the Unit Tests for further code samples.)
+
+
 
 ## Requirements
 

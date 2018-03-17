@@ -13,6 +13,101 @@ import Repeat
 class RepeatTests: XCTestCase {
 	
 	private var timerInstance: Any? = nil
+	private var debouncerInstance: Debouncer? = nil
+
+	func test_callWithoutCallback(){
+		
+		let d = Debouncer(.seconds(0))
+		
+		d.call()
+		XCTAssertTrue(true)
+	}
+	
+	func test_runOnceImmediatly(){
+		let e = expectation(description: "Run once and call immediatly")
+		
+		let d = Debouncer(.seconds(0))
+		d.callback = {
+			e.fulfill()
+		}
+		
+		d.call()
+		
+		self.wait(for: [e], timeout: 1)
+	}
+	
+	func test_runThreeTimesCountTwice(){
+		let e = expectation(description: "should fulfill three times")
+		e.expectedFulfillmentCount = 2
+		let d = Debouncer(.seconds(1))
+		d.callback = {
+			e.fulfill()
+		}
+		d.call()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+			d.call()
+		})
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
+			d.call()
+		})
+		
+		// Wait timeout in seconds
+		self.wait(for: [e], timeout: 2)
+	}
+	
+	func test_runThreeTimseeCountThreeTimes(){
+		let e = expectation(description: "should fulfill three times")
+		e.expectedFulfillmentCount = 3
+		let d = Debouncer(.seconds(1))
+		d.callback = {
+			e.fulfill()
+		}
+		d.call()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+			d.call()
+		})
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+			d.call()
+		})
+		
+		// Wait timeout in seconds
+		self.wait(for: [e], timeout: 3)
+	}
+	
+	func test_runTwiceCountTwice(){
+		let e = expectation(description: "should fulfill twice")
+		e.expectedFulfillmentCount = 2
+		let d = Debouncer(.seconds(1))
+		d.callback = {
+			e.fulfill()
+		}
+		d.call()
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+			d.call()
+		})
+		
+		// Wait timeout in seconds
+		self.wait(for: [e], timeout: 3)
+	}
+	
+	func test_debouncerTwiceCountOnce() {
+		
+		let exp = expectation(description: "should fullfile once, because calls are both runned immediatly and second one should get ignored")
+		exp.expectedFulfillmentCount = 1
+		
+		let debouncer = Debouncer(.seconds(1), callback: {
+			exp.fulfill()
+		})
+
+		debouncer.call()
+		debouncer.call()
+		
+		self.debouncerInstance = debouncer
+		wait(for: [exp], timeout: 30)
+	}
 	
 	func test_fireManually() {
 		let exp = expectation(description: "test_infiniteReset")
