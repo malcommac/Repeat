@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		52D6D9871BEFF229002C0205 /* Repeat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* Repeat.framework */; };
+		644EE2DA205D0EE600238416 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2D9205D0EE600238416 /* Throttler.swift */; };
+		644EE2DB205D0EE600238416 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2D9205D0EE600238416 /* Throttler.swift */; };
+		644EE2DC205D0EE600238416 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2D9205D0EE600238416 /* Throttler.swift */; };
+		644EE2DD205D0EE600238416 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2D9205D0EE600238416 /* Throttler.swift */; };
+		644EE2DF205D0EF500238416 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2DE205D0EF500238416 /* Debouncer.swift */; };
+		644EE2E0205D0EF500238416 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2DE205D0EF500238416 /* Debouncer.swift */; };
+		644EE2E1205D0EF500238416 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2DE205D0EF500238416 /* Debouncer.swift */; };
+		644EE2E2205D0EF500238416 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644EE2DE205D0EF500238416 /* Debouncer.swift */; };
 		64A18884204D313800DC2B4B /* Repeater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A18883204D313800DC2B4B /* Repeater.swift */; };
 		64A18885204D313800DC2B4B /* Repeater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A18883204D313800DC2B4B /* Repeater.swift */; };
 		64A18886204D313800DC2B4B /* Repeater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A18883204D313800DC2B4B /* Repeater.swift */; };
@@ -49,6 +57,9 @@
 		52D6D9E21BEFFF6E002C0205 /* Repeat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Repeat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6D9F01BEFFFBE002C0205 /* Repeat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Repeat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6DA0F1BF000BD002C0205 /* Repeat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Repeat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		644EE2D9205D0EE600238416 /* Throttler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Throttler.swift; path = Repeat/Throttler.swift; sourceTree = "<group>"; };
+		644EE2DE205D0EF500238416 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Debouncer.swift; path = Repeat/Debouncer.swift; sourceTree = "<group>"; };
+		644EE2E3205D15D100238416 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		64A18883204D313800DC2B4B /* Repeater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Repeater.swift; path = Repeat/Repeater.swift; sourceTree = "<group>"; };
 		8933C7891EB5B82A000D00A4 /* RepeatTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatTests.swift; sourceTree = "<group>"; };
 		AD2FAA261CD0B6D800659CF4 /* Repeat.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Repeat.plist; sourceTree = "<group>"; };
@@ -116,6 +127,7 @@
 		52D6D9721BEFF229002C0205 = {
 			isa = PBXGroup;
 			children = (
+				644EE2E3205D15D100238416 /* README.md */,
 				8933C7811EB5B7E0000D00A4 /* Sources */,
 				8933C7831EB5B7EB000D00A4 /* Tests */,
 				52D6D99C1BEFF38C002C0205 /* Configs */,
@@ -150,6 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				64A18883204D313800DC2B4B /* Repeater.swift */,
+				644EE2DE205D0EF500238416 /* Debouncer.swift */,
+				644EE2D9205D0EE600238416 /* Throttler.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -460,6 +474,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				64A18884204D313800DC2B4B /* Repeater.swift in Sources */,
+				644EE2DA205D0EE600238416 /* Throttler.swift in Sources */,
+				644EE2DF205D0EF500238416 /* Debouncer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,6 +492,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				64A18886204D313800DC2B4B /* Repeater.swift in Sources */,
+				644EE2DC205D0EE600238416 /* Throttler.swift in Sources */,
+				644EE2E1205D0EF500238416 /* Debouncer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +502,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				64A18887204D313800DC2B4B /* Repeater.swift in Sources */,
+				644EE2DD205D0EE600238416 /* Throttler.swift in Sources */,
+				644EE2E2205D0EF500238416 /* Debouncer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +512,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				64A18885204D313800DC2B4B /* Repeater.swift in Sources */,
+				644EE2DB205D0EE600238416 /* Throttler.swift in Sources */,
+				644EE2E0205D0EF500238416 /* Debouncer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

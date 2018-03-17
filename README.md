@@ -1,11 +1,13 @@
-# Repeat: modern NSTimer in GCD, debouncer and throttler
+# Repeat - modern NSTimer in GCD, debouncer and throttler
 
 [![Version](https://img.shields.io/cocoapods/v/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![License](https://img.shields.io/cocoapods/l/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat) [![Platform](https://img.shields.io/cocoapods/p/Repeat.svg?style=flat)](http://cocoadocs.org/docsets/Repeat)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/Repeat.svg)](https://img.shields.io/cocoapods/v/Repeat.svg)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Twitter](https://img.shields.io/badge/twitter-@danielemargutti-blue.svg?style=flat)](http://twitter.com/danielemargutti)
 
-<p align="center" >★★ <b>Star me to follow the project! </b> ★★</p>
+<p align="center" >★★ <b>Star me to follow the project! </b> ★★<br>
+Created by Daniele Margutti - [danielemargutti.com](http://www.danielemargutti.com)
+</p>
 
 Repeat is small lightweight alternative to `NSTimer` with a modern Swift Syntax, no strong references, multiple observers reusable instances.
 Repeat is based upon GCD - Grand Central Dispatch. 
@@ -38,9 +40,16 @@ Take a look below:
 | [**SwiftMsgPack**](https://github.com/malcommac/SwiftMsgPack)    | Fast/efficient msgPack encoder/decoder           |
 </p>
 
-## Examples
+## Documentation
+* [Timer](#timer)
+* [Debouncer](#debouncer)
+* [Throttler](#throttler)
 
-### Create single fire timer
+<a name="timer"/>
+
+### Timer
+
+#### Create single fire timer
 
 The following code create a timer which fires a single time after 5 seconds.
 
@@ -50,7 +59,7 @@ Repeater.once(after: .seconds(5)) { timer in
 }
 ```
 
-### Create recurrent finite timer
+#### Create recurrent finite timer
 
 The following code create a recurrent timer: it will fire every 10 minutes for 5 times, then stops.
 
@@ -60,7 +69,7 @@ Repeater.every(.minutes(10), count: 5) { timer  in
 }
 ```
 
-### Create recurrent infinite timer
+#### Create recurrent infinite timer
 
 The following code create a recurrent timer which fires every hour until it is manually stopped .
 
@@ -70,7 +79,7 @@ Repeater.every(.hours(1)) { timer in
 }
 ```
 
-### Manage a timer
+#### Manage a timer
 
 You can create a new instance of timer and start as needed by calling the `start()` function.
 
@@ -94,7 +103,7 @@ Properties:
 * `.mode`: define the type of timer (`infinite`,`finite`,`once`)
 * `.remainingIterations`: for a `.finite` mode it contains the remaining number of iterations before it finishes.
 
-### Adding/Removing Observers
+#### Adding/Removing Observers
 
 By default a new timer has a single observer specified by the init functions. You can, however, create additional observer by using `observe()` function. The result of this call is a token identifier you can use to remove the observer in a second time.
 Timer instance received in callback is weak.
@@ -112,7 +121,7 @@ You can remove an observer by using the token:
 timer.remove(token)
 ```
 
-### Observing state change
+#### Observing state change
 
 Each timer can be in one of the following states, you can observe via `.state` property:
 
@@ -128,8 +137,10 @@ timer.onStateChanged = { (timer,newState) in
 	// your own code
 }
 ```
+<a name="debouncer"/>
 
-## Debouncer
+### Debouncer
+
 Since 0.5 Repeater introduced `Debouncer` class.
 The Debouncer will delay a function call, and every time it's getting called it will delay the preceding call until the delay time is over.
 
@@ -150,7 +161,22 @@ debouncer.call()
 
 (Make sure to check out the Unit Tests for further code samples.)
 
+<a name="throttler"/>
 
+### Throttler
+
+Since 0.5 Repeater introduced `Throttler` class.
+
+Throttling wraps a block of code with throttling logic, guaranteeing that an action will never be called more than once each specified interval. Only the last dispatched code-block will be executed when delay has passed.
+
+```swift
+let throttler = Throttler(time: .milliseconds(500), {
+  // your code here
+})
+
+// Call throttler. Defined block will never be called more than once each specified interval.
+throttler.call()
+```
 
 ## Requirements
 
