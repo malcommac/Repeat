@@ -194,7 +194,7 @@ Repeat is compatible with Swift 4.x.
 All Apple platforms are supported:
 
 * iOS 8.0+
-* macOS 10.9+
+* macOS 10.10+
 * watchOS 2.0+
 * tvOS 9.0+
 
