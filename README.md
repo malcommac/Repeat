@@ -74,7 +74,7 @@ Repeater.once(after: .seconds(5)) { timer in
 The following code create a recurrent timer: it will fire every 10 minutes for 5 times, then stops.
 
 ```swift
-Repeater.every(.minutes(10), count: 5) { timer  in
+self.timer = Repeater.every(.minutes(10), count: 5) { timer  in
   // do something		
 }
 ```
@@ -84,7 +84,7 @@ Repeater.every(.minutes(10), count: 5) { timer  in
 The following code create a recurrent timer which fires every hour until it is manually stopped .
 
 ```swift
-Repeater.every(.hours(1)) { timer in
+self.timer = Repeater.every(.hours(1)) { timer in
   // do something
 }
 ```
@@ -94,7 +94,7 @@ Repeater.every(.hours(1)) { timer in
 You can create a new instance of timer and start as needed by calling the `start()` function.
 
 ```swift
-let timer = Repeater(interval: .seconds(5), mode: .infinite) { _ in
+self.timer = Repeater(interval: .seconds(5), mode: .infinite) { _ in
   // do something		
 }
 timer.start()
