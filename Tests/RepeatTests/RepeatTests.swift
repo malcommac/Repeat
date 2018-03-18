@@ -276,7 +276,16 @@ class RepeatTests: XCTestCase {
 		wait(for: [exp], timeout: 20)
 	}
 	
-    static var allTests = [
-        ("testExample", test_once),
-    ]
+	func test_equality() {
+		let repeater1 = Repeater(interval: .seconds(1)) { _ in XCTFail() }
+		let repeater2 = Repeater(interval: .seconds(1)) { _ in XCTFail() }
+		XCTAssertEqual(repeater1, repeater1)
+		XCTAssertEqual(repeater2, repeater2)
+		XCTAssertNotEqual(repeater1, repeater2)
+	}
+	
+	static var allTests = [
+		("testExample", test_once),
+		("test_equality", test_equality)
+	]
 }
