@@ -59,12 +59,14 @@ Take a look below:
 
 ### Timer
 
+**Note**: As any other object `Repeater` class is subject to the standard memory management rules. So once you create your timer instance you need to retain it somewhere in order to avoid premature deallocation just after the start command.
+
 #### Create single fire timer
 
 The following code create a timer which fires a single time after 5 seconds.
 
 ```swift
-Repeater.once(after: .seconds(5)) { timer in
+self.timer = Repeater.once(after: .seconds(5)) { timer in
   // do something	
 }
 ```
