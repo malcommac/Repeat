@@ -1,6 +1,6 @@
-import XCTest
 @testable import RepeatTests
+import XCTest
 
 XCTMain([
-    testCase(RepeatTests.allTests),
+    testCase(RepeatTests.allTests)
 ])

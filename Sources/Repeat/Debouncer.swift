@@ -32,19 +32,19 @@ import Foundation
 /// The Debouncer will delay a function call, and every time it's getting called it will
 /// delay the preceding call until the delay time is over.
 open class Debouncer {
-	
+
 	/// Typealias for callback type
-	public typealias Callback = (() -> (Void))
-	
+	public typealias Callback = (() -> Void)
+
 	/// Delay interval
 	public let delay: Repeater.Interval
-	
+
 	/// Callback to activate
-	public var callback: Callback? = nil
-	
+	public var callback: Callback?
+
 	/// Internal timer to fire callback event.
 	private var timer: Repeater?
-	
+
 	/// Initialize a new debouncer with given delay and callback.
 	/// Debouncer class to delay functions that only get delay each other until the timer fires.
 	///
@@ -55,17 +55,17 @@ open class Debouncer {
 		self.delay = delay
 		self.callback = callback
 	}
-	
+
 	/// Call debouncer to start the callback after the delayed time.
 	/// Multiple calls will ignore the older calls and overwrite the firing time.
 	public func call() {
 		if self.timer == nil {
 			self.timer = Repeater.once(after: self.delay, { _ in
-				guard let cb = self.callback else {
+				guard let callback = self.callback else {
 					debugPrint("Debouncer fired but callback not set.")
 					return
 				}
-				cb()
+				callback()
 			})
 		} else {
 			self.timer?.reset(self.delay, restart: true)
