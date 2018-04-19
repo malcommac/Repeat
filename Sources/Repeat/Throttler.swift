@@ -56,7 +56,7 @@ open class Throttler {
 	private var callback: Callback?
 
 	/// Last scheduled callback job
-	private var callbackJob: DispatchWorkItem = DispatchWorkItem(block: {})
+	private var callbackJob = DispatchWorkItem(block: {})
 
 	/// Previous scheduled time
 	private var previousScheduled: DispatchTime?
