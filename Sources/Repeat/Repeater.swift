@@ -270,9 +270,11 @@ open class Repeater : Equatable {
 	/// Destroy current timer
 	private func destroyTimer() {
 		self.timer?.setEventHandler(handler: nil)
-		//self.timer?.resume()
 		self.timer?.cancel()
-		self.timer?.resume()
+        
+		if state == .paused || state == .finished {
+			self.timer?.resume()
+		}
 	}
 	
 	/// Create and schedule a timer that will call `handler` once after the specified time.
@@ -364,9 +366,10 @@ open class Repeater : Equatable {
 	/// Pause a running timer. If timer is paused it does nothing.
 	@discardableResult
 	public func pause() -> Bool {
-		guard state != .paused else {
+		guard state != .paused && state != .finished else {
 			return false
 		}
+		
 		return self.setPause(from: self.state)
 	}
 	
@@ -417,7 +420,6 @@ open class Repeater : Equatable {
 	
 	deinit {
 		self.observers.removeAll()
-		self.pause()
 		self.destroyTimer()
 	}
 	
