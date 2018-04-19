@@ -4,7 +4,7 @@ Latest version of Repeat is [0.5.2](https://github.com/malcommac/Repeat/releases
 
 **Changelog - 0.5.2**:
 
-- [#14](https://github.com/malcommac/Repeat/pull/14): Refactors equatable implementation to use an identity operator.
+- [#22](https://github.com/malcommac/Repeat/pull/22): Avoid over resume / suspend dispatch timer which causes crashes.
 
 **Changelog - 0.5.1**:
 
