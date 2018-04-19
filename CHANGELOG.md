@@ -1,6 +1,10 @@
 ## CHANGELOG
 
-Latest version of Repeat is [0.5.1](https://github.com/malcommac/Repeat/releases/tag/0.5.1) published on 2018/03/18.
+Latest version of Repeat is [0.5.2](https://github.com/malcommac/Repeat/releases/tag/0.5.2) published on 2018/04/19.
+
+**Changelog - 0.5.2**:
+
+- [#14](https://github.com/malcommac/Repeat/pull/14): Refactors equatable implementation to use an identity operator.
 
 **Changelog - 0.5.1**:
 
