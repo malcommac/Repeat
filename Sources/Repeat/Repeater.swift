@@ -245,9 +245,9 @@ open class Repeater: Equatable {
 		let repeatInterval = interval.value
 		let deadline: DispatchTime = (DispatchTime.now() + repeatInterval)
 		if self.mode.isRepeating {
-			timer.schedule(deadline: deadline, repeating: repeatInterval, leeway: tolerance)
+			timer.scheduleRepeating(deadline: deadline, interval: repeatInterval, leeway: tolerance)
 		} else {
-			timer.schedule(deadline: deadline, leeway: tolerance)
+			timer.scheduleOneshot(deadline: deadline, leeway: tolerance)
 		}
 
 		timer.setEventHandler { [weak self] in
