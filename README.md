@@ -202,7 +202,7 @@ All Apple platforms are supported:
 
 ## Latest Version
 
-Latest version of Repeat is [0.5.2](https://github.com/malcommac/Repeat/releases/tag/0.5.2) published on 2018/04/19.
+Latest version of Repeat is [0.5.3](https://github.com/malcommac/Repeat/releases/tag/0.5.3) published on 2018/04/28.
 Full changelog is available in [CHANGELOG.md](CHANGELOG.md) file.
 
 ## Installation
