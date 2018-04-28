@@ -1,7 +1,11 @@
 ## CHANGELOG
 
-Latest version of Repeat is [0.5.3](https://github.com/malcommac/Repeat/releases/tag/0.5.3) published on 2018/04/28.
+Latest version of Repeat is [0.5.4](https://github.com/malcommac/Repeat/releases/tag/0.5.4) published on 2018/04/28.
 
+**Changelog - 0.5.4**:
+
+- [#24](https://github.com/malcommac/Repeat/pull/24): Added `minutes` in `Interval` of `Repeater` timer.
+ 
 **Changelog - 0.5.3**:
 
 - [#23](https://github.com/malcommac/Repeat/pull/23): Allow passing queue as parameter for `.once` and `.every` inits; queue name is now generated automatically via `NSUUID`.

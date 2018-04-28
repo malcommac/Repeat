@@ -93,6 +93,7 @@ open class Repeater: Equatable {
 		case nanoseconds(_: Int)
 		case microseconds(_: Int)
 		case milliseconds(_: Int)
+		case minutes(_: Int)
 		case seconds(_: Double)
 		case hours(_: Int)
 		case days(_: Int)
@@ -103,6 +104,7 @@ open class Repeater: Equatable {
 			case .microseconds(let value):		return .microseconds(value)
 			case .milliseconds(let value):		return .milliseconds(value)
 			case .seconds(let value):			return .milliseconds(Int( Double(value) * Double(1000)))
+			case .minutes(let value):			return .seconds(value * 60)
 			case .hours(let value):				return .seconds(value * 3600)
 			case .days(let value):				return .seconds(value * 86400)
 			}
