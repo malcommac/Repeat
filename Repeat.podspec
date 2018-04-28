@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Repeat"
-  s.version      = "0.5.3"
+  s.version      = "0.5.4"
   s.summary      = "Modern NSTimer alternative in Swift"
   s.description  = <<-DESC
 	Repeat is a modern alternative to NSTimer; no strong references, multiple observers, reusable instances with start/stop/pause support in swifty syntax.
