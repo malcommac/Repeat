@@ -1,10 +1,14 @@
 ## CHANGELOG
 
-Latest version of Repeat is [0.5.2](https://github.com/malcommac/Repeat/releases/tag/0.5.2) published on 2018/04/19.
+Latest version of Repeat is [0.5.3](https://github.com/malcommac/Repeat/releases/tag/0.5.3) published on 2018/04/28.
+
+**Changelog - 0.5.3**:
+
+- [#23](https://github.com/malcommac/Repeat/pull/23): Allow passing queue as parameter for `.once` and `.every` inits; queue name is now generated automatically via `NSUUID`.
 
 **Changelog - 0.5.2**:
 
-- [#14](https://github.com/malcommac/Repeat/pull/14): Refactors equatable implementation to use an identity operator.
+- [#22](https://github.com/malcommac/Repeat/pull/22): Avoid over resume / suspend dispatch timer which causes crashes.
 
 **Changelog - 0.5.1**:
 
