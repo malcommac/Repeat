@@ -241,7 +241,8 @@ open class Repeater: Equatable {
 	///
 	/// - Returns: dispatch timer
 	private func configureTimer() -> DispatchSourceTimer {
-		let timer = DispatchSource.makeTimerSource(queue: (queue ?? DispatchQueue(label: "com.repeat.queue")))
+		let associatedQueue = (queue ?? DispatchQueue(label: "com.repeat.\(NSUUID().uuidString)"))
+		let timer = DispatchSource.makeTimerSource(queue: associatedQueue)
 		let repeatInterval = interval.value
 		let deadline: DispatchTime = (DispatchTime.now() + repeatInterval)
 		if self.mode.isRepeating {
@@ -272,11 +273,12 @@ open class Repeater: Equatable {
 	///
 	/// - Parameters:
 	///   - interval: interval delay for single fire
-	///   - handler: handler to call
-	/// - Returns: created timer
+	///   - queue: destination queue, if `nil` a new `DispatchQueue` is created automatically.
+	///   - observer: handler to call when timer fires.
+	/// - Returns: timer instance
 	@discardableResult
-	public class func once(after interval: Interval, _ observer: @escaping Observer) -> Repeater {
-		let timer = Repeater(interval: interval, mode: .once, observer: observer)
+	public class func once(after interval: Interval, queue: DispatchQueue? = nil, _ observer: @escaping Observer) -> Repeater {
+		let timer = Repeater(interval: interval, mode: .once, queue: queue, observer: observer)
 		timer.start()
 		return timer
 	}
@@ -286,12 +288,13 @@ open class Repeater: Equatable {
 	/// - Parameters:
 	///   - interval: interval of fire
 	///   - count: a non `nil` and > 0  value to limit the number of fire, `nil` to set it as infinite.
+	///   - queue: destination queue, if `nil` a new `DispatchQueue` is created automatically.
 	///   - handler: handler to call on fire
 	/// - Returns: timer
 	@discardableResult
-	public class func every(_ interval: Interval, count: Int? = nil, _ handler: @escaping Observer) -> Repeater {
+	public class func every(_ interval: Interval, count: Int? = nil, queue: DispatchQueue? = nil, _ handler: @escaping Observer) -> Repeater {
 		let mode: Mode = (count != nil ? .finite(count!) : .infinite)
-		let timer = Repeater(interval: interval, mode: mode, observer: handler)
+		let timer = Repeater(interval: interval, mode: mode, queue: queue, observer: handler)
 		timer.start()
 		return timer
 	}
