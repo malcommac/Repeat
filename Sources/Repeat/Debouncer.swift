@@ -37,7 +37,7 @@ open class Debouncer {
 	public typealias Callback = (() -> Void)
 
 	/// Delay interval
-	public let delay: Repeater.Interval
+	private (set) public var delay: Repeater.Interval
 
 	/// Callback to activate
 	public var callback: Callback?
@@ -58,7 +58,15 @@ open class Debouncer {
 
 	/// Call debouncer to start the callback after the delayed time.
 	/// Multiple calls will ignore the older calls and overwrite the firing time.
-	public func call() {
+    ///
+    /// - Parameters:
+    ///   - newDelay: New delay interval
+    public func call(newDelay: Repeater.Interval? = nil) {
+
+        if let newDelay = newDelay {
+            self.delay = newDelay
+        }
+
 		if self.timer == nil {
 			self.timer = Repeater.once(after: self.delay, { [weak self] _ in
 				guard let callback = self?.callback else {
