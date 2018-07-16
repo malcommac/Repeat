@@ -60,8 +60,8 @@ open class Debouncer {
 	/// Multiple calls will ignore the older calls and overwrite the firing time.
 	public func call() {
 		if self.timer == nil {
-			self.timer = Repeater.once(after: self.delay, { _ in
-				guard let callback = self.callback else {
+			self.timer = Repeater.once(after: self.delay, { [weak self] _ in
+				guard let callback = self?.callback else {
 					debugPrint("Debouncer fired but callback not set.")
 					return
 				}
