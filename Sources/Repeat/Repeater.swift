@@ -279,8 +279,8 @@ open class Repeater: Equatable {
 	///   - observer: handler to call when timer fires.
 	/// - Returns: timer instance
 	@discardableResult
-	public class func once(after interval: Interval, queue: DispatchQueue? = nil, _ observer: @escaping Observer) -> Repeater {
-		let timer = Repeater(interval: interval, mode: .once, queue: queue, observer: observer)
+	public class func once(after interval: Interval, tolerance: DispatchTimeInterval = .nanoseconds(0), queue: DispatchQueue? = nil, _ observer: @escaping Observer) -> Repeater {
+        let timer = Repeater(interval: interval, mode: .once, tolerance: tolerance, queue: queue, observer: observer)
 		timer.start()
 		return timer
 	}
@@ -294,9 +294,9 @@ open class Repeater: Equatable {
 	///   - handler: handler to call on fire
 	/// - Returns: timer
 	@discardableResult
-	public class func every(_ interval: Interval, count: Int? = nil, queue: DispatchQueue? = nil, _ handler: @escaping Observer) -> Repeater {
+	public class func every(_ interval: Interval, count: Int? = nil, tolerance: DispatchTimeInterval = .nanoseconds(0), queue: DispatchQueue? = nil, _ handler: @escaping Observer) -> Repeater {
 		let mode: Mode = (count != nil ? .finite(count!) : .infinite)
-		let timer = Repeater(interval: interval, mode: mode, queue: queue, observer: handler)
+        let timer = Repeater(interval: interval, mode: mode, tolerance: tolerance, queue: queue, observer: handler)
 		timer.start()
 		return timer
 	}
@@ -396,7 +396,7 @@ open class Repeater: Equatable {
 		if case .finite = self.mode {
 			self.remainingIterations! -= 1
 		}
-		
+
 		// dispatch to observers
 		self.observers.values.forEach { $0(self) }
 
