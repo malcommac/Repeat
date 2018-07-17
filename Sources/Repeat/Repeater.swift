@@ -393,6 +393,10 @@ open class Repeater: Equatable {
 	private func timeFired() {
 		self.state = .executing
 
+		if case .finite = self.mode {
+			self.remainingIterations! -= 1
+		}
+		
 		// dispatch to observers
 		self.observers.values.forEach { $0(self) }
 
@@ -404,7 +408,6 @@ open class Repeater: Equatable {
 			self.setPause(from: .executing, to: .finished)
 		case .finite:
 			// for finite intervals we decrement the left iterations count...
-			self.remainingIterations! -= 1
 			if self.remainingIterations! == 0 {
 				// ...if left count is zero we just pause the timer and stop
 				self.setPause(from: .executing, to: .finished)
