@@ -45,15 +45,19 @@ open class Debouncer {
 	/// Internal timer to fire callback event.
 	private var timer: Repeater?
 
+    /// Dispatch queue of the timer
+    private let queue: DispatchQueue?
+
 	/// Initialize a new debouncer with given delay and callback.
 	/// Debouncer class to delay functions that only get delay each other until the timer fires.
 	///
 	/// - Parameters:
 	///   - delay: delay interval
 	///   - callback: callback to activate
-	public init(_ delay: Repeater.Interval, callback: Callback? = nil) {
+    public init(_ delay: Repeater.Interval, callback: Callback? = nil, queue: DispatchQueue? = nil) {
 		self.delay = delay
 		self.callback = callback
+        self.queue = queue
 	}
 
 	/// Call debouncer to start the callback after the delayed time.
@@ -68,7 +72,7 @@ open class Debouncer {
         }
 
 		if self.timer == nil {
-			self.timer = Repeater.once(after: self.delay, { [weak self] _ in
+            self.timer = Repeater.once(after: self.delay, queue: queue, { [weak self] _ in
 				guard let callback = self?.callback else {
 					debugPrint("Debouncer fired but callback not set.")
 					return
