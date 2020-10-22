@@ -37,34 +37,20 @@ open class Repeater: Equatable {
 	/// - running: timer is running
 	/// - executing: the observers are being executed
 	/// - finished: timer lifetime is finished
-	public enum State: Equatable, CustomStringConvertible {
-		case paused
+    public enum State: String, Equatable, CustomStringConvertible {
+        case paused = "idle/paused"
 		case running
 		case executing
 		case finished
 
-		public static func == (lhs: State, rhs: State) -> Bool {
-			switch (lhs, rhs) {
-			case (.paused, .paused),
-				 (.running, .running),
-				 (.executing, .executing),
-				 (.finished, .finished):
-				return true
-			default:
-				return false
-			}
-		}
-
 		/// Return `true` if timer is currently running, including when the observers are being executed.
 		public var isRunning: Bool {
-			guard self == .running || self == .executing else { return false }
-			return true
+            self == .running || self == .executing
 		}
 
 		/// Return `true` if the observers are being executed.
 		public var isExecuting: Bool {
-			guard case .executing = self else { return false }
-			return true
+            self == .executing
 		}
 
 		/// Is timer finished its lifetime?
@@ -72,31 +58,24 @@ open class Repeater: Equatable {
 		/// It return `true` for `.once` mode timer after the first fire,
 		/// and when `.remainingIterations` is zero for `.finite` mode timers
 		public var isFinished: Bool {
-			guard case .finished = self else { return false }
-			return true
+            self == .finished
 		}
 
 		/// State description
-		public var description: String {
-			switch self {
-			case .paused: return "idle/paused"
-			case .finished: return "finished"
-			case .running: return "running"
-			case .executing: return "executing"
-			}
-		}
-
+        public var description: String {
+            rawValue
+        }
 	}
 
 	/// Repeat interval
 	public enum Interval {
-		case nanoseconds(_: Int)
-		case microseconds(_: Int)
-		case milliseconds(_: Int)
-		case minutes(_: Int)
-		case seconds(_: Double)
-		case hours(_: Int)
-		case days(_: Int)
+        case nanoseconds(Int)
+        case microseconds(Int)
+        case milliseconds(Int)
+        case minutes(Int)
+        case seconds(Double)
+        case hours(Int)
+        case days(Int)
 
 		internal var value: DispatchTimeInterval {
 			switch self {
@@ -116,35 +95,28 @@ open class Repeater: Equatable {
 	/// - infinite: infinite number of repeats.
 	/// - finite: finite number of repeats.
 	/// - once: single repeat.
-	public enum Mode {
+    public enum Mode: Equatable {
 		case infinite
-		case finite(_: Int)
+		case finite(Int)
 		case once
 
 		/// Is timer a repeating timer?
 		internal var isRepeating: Bool {
-			switch self {
-			case .once: return false
-			default:	return true
-			}
+            self != .once
 		}
 
 		/// Number of repeats, if applicable. Otherwise `nil`
 		public var countIterations: Int? {
-			switch self {
-			case .finite(let counts):	return counts
-			default:					return nil
-			}
+            if case .finite(let counts) = self {
+                return counts
+            }
+            return nil
 		}
 
 		/// Is infinite timer
-		public var isInfinite: Bool {
-			guard case .infinite = self else {
-				return false
-			}
-			return true
-		}
-
+        public var isInfinite: Bool {
+            self == .infinite
+        }
 	}
 
 	/// Handler typealias
@@ -156,7 +128,7 @@ open class Repeater: Equatable {
 	/// Current state of the timer
 	public private(set) var state: State = .paused {
 		didSet {
-			self.onStateChanged?(self, state)
+            onStateChanged?(self, state)
 		}
 	}
 
@@ -195,7 +167,13 @@ open class Repeater: Equatable {
 	///   - tolerance: tolerance of the timer, 0 is default.
 	///   - queue: queue in which the timer should be executed; if `nil` a new queue is created automatically.
 	///   - observer: observer
-	public init(interval: Interval, mode: Mode = .infinite, tolerance: DispatchTimeInterval = .nanoseconds(0), queue: DispatchQueue? = nil, observer: @escaping Observer) {
+    public init(
+        interval: Interval,
+        mode: Mode = .infinite,
+        tolerance: DispatchTimeInterval = .nanoseconds(0),
+        queue: DispatchQueue? = nil,
+        observer: @escaping Observer
+    ) {
 		self.mode = mode
 		self.interval = interval
 		self.tolerance = tolerance
@@ -211,13 +189,13 @@ open class Repeater: Equatable {
 	/// - Returns: token used to remove the handler
 	@discardableResult
 	public func observe(_ observer: @escaping Observer) -> ObserverToken {
-		var (new, overflow) = self.nextObserverID.addingReportingOverflow(1)
+		var (new, overflow) = nextObserverID.addingReportingOverflow(1)
 		if overflow { // you need to add an incredible number of offset...sure you can't
-			self.nextObserverID = 0
+			nextObserverID = 0
 			new = 0
 		}
-		self.nextObserverID = new
-		self.observers[new] = observer
+        nextObserverID = new
+        observers[new] = observer
 		return new
 	}
 
@@ -225,17 +203,17 @@ open class Repeater: Equatable {
 	///
 	/// - Parameter id: id of the observer to remove
 	public func remove(observer identifier: ObserverToken) {
-		self.observers.removeValue(forKey: identifier)
+		observers.removeValue(forKey: identifier)
 	}
 
 	/// Remove all observers of the timer.
 	///
 	/// - Parameter stopTimer: `true` to also stop timer by calling `pause()` function.
 	public func removeAllObservers(thenStop stopTimer: Bool = false) {
-		self.observers.removeAll()
+		observers.removeAll()
 
 		if stopTimer {
-			self.pause()
+			pause()
 		}
 	}
 
@@ -243,15 +221,18 @@ open class Repeater: Equatable {
 	///
 	/// - Returns: dispatch timer
 	private func configureTimer() -> DispatchSourceTimer {
-		let associatedQueue = (queue ?? DispatchQueue(label: "com.repeat.\(NSUUID().uuidString)"))
-		let timer = DispatchSource.makeTimerSource(queue: associatedQueue)
-		let repeatInterval = interval.value
-		let deadline: DispatchTime = (DispatchTime.now() + repeatInterval)
-		if self.mode.isRepeating {
-			timer.schedule(deadline: deadline, repeating: repeatInterval, leeway: tolerance)
-		} else {
-			timer.schedule(deadline: deadline, leeway: tolerance)
-		}
+
+        let timer = DispatchSource.makeTimerSource(
+            queue: queue ?? DispatchQueue(
+                label: "com.repeat.\(NSUUID().uuidString)"
+            )
+        )
+
+        timer.schedule(
+            deadline: .now() + interval.value,
+            repeating: mode.isRepeating ? interval.value : .never,
+            leeway: tolerance
+        )
 
 		timer.setEventHandler { [weak self] in
 			if let unwrapped = self {
@@ -263,11 +244,11 @@ open class Repeater: Equatable {
 
 	/// Destroy current timer
 	private func destroyTimer() {
-		self.timer?.setEventHandler(handler: nil)
-		self.timer?.cancel()
+        timer?.setEventHandler(handler: nil)
+        timer?.cancel()
 
 		if state == .paused || state == .finished {
-			self.timer?.resume()
+            timer?.resume()
 		}
 	}
 
@@ -279,8 +260,19 @@ open class Repeater: Equatable {
 	///   - observer: handler to call when timer fires.
 	/// - Returns: timer instance
 	@discardableResult
-	public class func once(after interval: Interval, tolerance: DispatchTimeInterval = .nanoseconds(0), queue: DispatchQueue? = nil, _ observer: @escaping Observer) -> Repeater {
-        let timer = Repeater(interval: interval, mode: .once, tolerance: tolerance, queue: queue, observer: observer)
+    public class func once(
+        after interval: Interval,
+        tolerance: DispatchTimeInterval = .nanoseconds(0),
+        queue: DispatchQueue? = nil,
+        _ observer: @escaping Observer
+    ) -> Repeater {
+        let timer = Repeater(
+            interval: interval,
+            mode: .once,
+            tolerance: tolerance,
+            queue: queue,
+            observer: observer
+        )
 		timer.start()
 		return timer
 	}
@@ -294,9 +286,20 @@ open class Repeater: Equatable {
 	///   - handler: handler to call on fire
 	/// - Returns: timer
 	@discardableResult
-	public class func every(_ interval: Interval, count: Int? = nil, tolerance: DispatchTimeInterval = .nanoseconds(0), queue: DispatchQueue? = nil, _ handler: @escaping Observer) -> Repeater {
-		let mode: Mode = (count != nil ? .finite(count!) : .infinite)
-        let timer = Repeater(interval: interval, mode: mode, tolerance: tolerance, queue: queue, observer: handler)
+    public class func every(
+        _ interval: Interval,
+        count: Int? = nil,
+        tolerance: DispatchTimeInterval = .nanoseconds(0),
+        queue: DispatchQueue? = nil,
+        _ handler: @escaping Observer
+    ) -> Repeater {
+        let timer = Repeater(
+            interval: interval,
+            mode: count != nil ? .finite(count!) : .infinite,
+            tolerance: tolerance,
+            queue: queue,
+            observer: handler
+        )
 		timer.start()
 		return timer
 	}
@@ -305,9 +308,9 @@ open class Repeater: Equatable {
 	///
 	/// - Parameter pause: `true` to pause after fire, `false` to continue the regular firing schedule.
 	public func fire(andPause pause: Bool = false) {
-		self.timeFired()
-		if pause == true {
-			self.pause()
+        timeFired()
+        if pause {
+            self.pause()
 		}
 	}
 
@@ -316,48 +319,51 @@ open class Repeater: Equatable {
 	/// - Parameters:
 	///   - interval: new fire interval; pass `nil` to keep the latest interval set.
 	///   - restart: `true` to automatically restart the timer, `false` to keep it stopped after configuration.
-	public func reset(_ interval: Interval?, restart: Bool = true) {
-		if self.state.isRunning {
-			self.setPause(from: self.state)
+    public func reset(
+        _ interval: Interval?,
+        restart: Bool = true
+    ) {
+        if state.isRunning {
+            setPause(from: state)
 		}
 
 		// For finite counter we want to also reset the repeat count
 		if case .finite(let count) = self.mode {
-			self.remainingIterations = count
+            remainingIterations = count
 		}
 
 		// Create a new instance of timer configured
 		if let newInterval = interval {
 			self.interval = newInterval
 		} // update interval
-		self.destroyTimer()
-		self.timer = configureTimer()
-		self.state = .paused
+        destroyTimer()
+        timer = configureTimer()
+        state = .paused
 
 		if restart {
-			self.timer?.resume()
-			self.state = .running
+            timer?.resume()
+            state = .running
 		}
 	}
 
 	/// Start timer. If timer is already running it does nothing.
 	@discardableResult
 	public func start() -> Bool {
-		guard self.state.isRunning == false else {
+        guard !state.isRunning else {
 			return false
 		}
 
 		// If timer has not finished its lifetime we want simply
 		// restart it from the current state.
-		guard self.state.isFinished == true else {
-			self.state = .running
-			self.timer?.resume()
+        guard state.isFinished else {
+            state = .running
+            timer?.resume()
 			return true
 		}
 
 		// Otherwise we need to reset the state based upon the mode
 		// and start it again.
-		self.reset(nil, restart: true)
+        reset(nil, restart: true)
 		return true
 	}
 
@@ -368,7 +374,7 @@ open class Repeater: Equatable {
 			return false
 		}
 
-		return self.setPause(from: self.state)
+		return setPause(from: self.state)
 	}
 
 	/// Pause a running timer optionally changing the state with regard to the current state.
@@ -379,38 +385,38 @@ open class Repeater: Equatable {
 	/// - Returns: `true` if timer is paused
 	@discardableResult
 	private func setPause(from currentState: State, to newState: State = .paused) -> Bool {
-		guard self.state == currentState else {
+        guard state == currentState else {
 			return false
 		}
 
-		self.timer?.suspend()
-		self.state = newState
+        timer?.suspend()
+        state = newState
 
 		return true
 	}
 
 	/// Called when timer is fired
 	private func timeFired() {
-		self.state = .executing
+        state = .executing
 
-		if case .finite = self.mode {
-			self.remainingIterations! -= 1
+        if case .finite = mode {
+            remainingIterations! -= 1
 		}
 
 		// dispatch to observers
-		self.observers.values.forEach { $0(self) }
+        observers.values.forEach { $0(self) }
 
 		// manage lifetime
-		switch self.mode {
+		switch mode {
 		case .once:
 			// once timer's lifetime is finished after the first fire
 			// you can reset it by calling `reset()` function.
-			self.setPause(from: .executing, to: .finished)
+            setPause(from: .executing, to: .finished)
 		case .finite:
 			// for finite intervals we decrement the left iterations count...
-			if self.remainingIterations! == 0 {
+            if remainingIterations! == 0 {
 				// ...if left count is zero we just pause the timer and stop
-				self.setPause(from: .executing, to: .finished)
+                setPause(from: .executing, to: .finished)
 			}
 		case .infinite:
 			// infinite timer does nothing special on the state machine
@@ -420,11 +426,11 @@ open class Repeater: Equatable {
 	}
 
 	deinit {
-		self.observers.removeAll()
-		self.destroyTimer()
+        observers.removeAll()
+        destroyTimer()
 	}
 
 	public static func == (lhs: Repeater, rhs: Repeater) -> Bool {
-		return lhs === rhs
+        lhs === rhs
 	}
 }
